@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
+import { signup } from '../../auth_signup_password';
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState('');
@@ -16,6 +17,7 @@ export default function RegisterScreen() {
       Alert.alert('Erreur', 'Les mots de passe ne correspondent pas.');
       return;
     }
+    signup(email, password);
     router.replace('/profile');
   }
 
@@ -61,6 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 28,
@@ -69,12 +72,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
+    height: 40,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    fontSize: 16,
+    padding: 10,
+    margin: 12,
   },
   button: {
     backgroundColor: '#34C759',
@@ -83,6 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
+    marginTop: 8,
   },
   buttonText: {
     color: '#fff',
