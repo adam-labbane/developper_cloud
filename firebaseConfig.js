@@ -1,13 +1,13 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCJCCFLRkiiZaCjN0IiNrhqEc9xkNwzBck",
-  authDomain: "web-cloud-ynov.firebaseapp.com",
-  projectId: "web-cloud-ynov",
-  storageBucket: "web-cloud-ynov.appspot.com",
-  messagingSenderId: "864572196508",
-  appId: "1:864572196508:web:a958f5a1710aeaebc40f59",
-  measurementId: "G-QM5KYQF0N7"
+  apiKey: "AIzaSyDLy2g6LYFKhT28hhzDNOs_a2FwW0zSch8",
+  authDomain: "web-cloud-ynov-a908b.firebaseapp.com",
+  projectId: "web-cloud-ynov-a908b",
+  storageBucket: "web-cloud-ynov-a908b.firebasestorage.app",
+  messagingSenderId: "297875973846",
+  appId: "1:297875973846:web:7f7ed90689a3d75c408b77",
+  measurementId: "G-XE1ZSHRZ36"
 };
 
 const app = initializeApp(firebaseConfig);
