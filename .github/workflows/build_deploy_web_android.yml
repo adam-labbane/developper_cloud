@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -26,10 +36,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v3
-
       - name: Build web app
         run: npm run predeploy
 
@@ -48,20 +54,12 @@ jobs:
           path: dist
           if-no-files-found: error
 
-  # Deploy job
   deploy:
-    # Deploy to the github-pages environment
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-    # Add a dependency to the build job
     needs: build
-    # Specify runner + deployment step
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
