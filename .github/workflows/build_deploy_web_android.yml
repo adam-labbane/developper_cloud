@@ -16,9 +16,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ── Job 1 : Build & Deploy web sur GitHub Pages ────────────────────────────
   build:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [22.x]
@@ -39,15 +39,6 @@ jobs:
       - name: Build web app
         run: npm run predeploy
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Create update
-        run: eas update --auto --platform android --non-interactive
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -64,3 +55,32 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # ── Job 2 : EAS Android update (indépendant, n'impacte pas Pages) ──────────
+  android-update:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Create update
+        run: eas update --auto --platform android --non-interactive
