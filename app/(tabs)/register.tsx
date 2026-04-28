@@ -1,24 +1,46 @@
 import { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { signup } from '../../auth_signup_password';
+import { Toast } from '../../components/toast';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
+  const [toast, setToast] = useState({ visible: false, message: '', type: 'success' as 'success' | 'error' });
 
-  function handleRegister() {
+  function showToast(message: string, type: 'success' | 'error') {
+    setToast({ visible: true, message, type });
+    setTimeout(() => setToast(t => ({ ...t, visible: false })), 2500);
+  }
+
+  async function handleRegister() {
     if (!email || !password || !confirm) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+      showToast('Veuillez remplir tous les champs.', 'error');
+      return;
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      showToast('Format d\'email invalide.', 'error');
+      return;
+    }
+    if (password.length < 6) {
+      showToast('Le mot de passe doit contenir au moins 6 caractères.', 'error');
       return;
     }
     if (password !== confirm) {
-      Alert.alert('Erreur', 'Les mots de passe ne correspondent pas.');
+      showToast('Les mots de passe ne correspondent pas.', 'error');
       return;
     }
-    signup(email, password);
-    router.replace('/profile');
+    try {
+      await signup(email, password);
+      showToast('Compte créé avec succès !', 'success');
+      setTimeout(() => router.replace('/profile'), 1000);
+    } catch (e) {
+      showToast('Erreur lors de l\'inscription.', 'error');
+    }
   }
 
   return (
@@ -36,7 +58,7 @@ export default function RegisterScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Mot de passe"
+        placeholder="Mot de passe (min. 6 caractères)"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -53,6 +75,8 @@ export default function RegisterScreen() {
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>S'inscrire</Text>
       </TouchableOpacity>
+
+      <Toast message={toast.message} type={toast.type} visible={toast.visible} />
     </View>
   );
 }
@@ -82,7 +106,6 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#34C759',
     paddingVertical: 14,
-    paddingHorizontal: 32,
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
