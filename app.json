@@ -44,7 +44,7 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true,
-      "baseUrl": "/web-cloud-ynov"
+      "baseUrl": "/developper_cloud"
     },
     "extra": {
       "router": {},
