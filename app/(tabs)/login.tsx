@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { router } from 'expo-router';
+import { signin } from '../../auth_signin_password';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -10,7 +12,8 @@ export default function LoginScreen() {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
       return;
     }
-    Alert.alert('Connexion', `Connecté en tant que ${email}`);
+    signin(email, password);
+    router.replace('/profile');
   }
 
   return (
@@ -47,6 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 28,
@@ -55,12 +59,12 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
+    height: 40,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    fontSize: 16,
+    padding: 10,
+    margin: 12,
   },
   button: {
     backgroundColor: '#007AFF',
@@ -69,6 +73,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '100%',
     alignItems: 'center',
+    marginTop: 8,
   },
   buttonText: {
     color: '#fff',
